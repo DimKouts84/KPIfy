@@ -1,0 +1,182 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<div class="m-1 justify-content-evenly" align="center">
+    <div class="p-3"><h3>Welcome to KPIfy for Employee Performance Monitoring </h3></div>
+    <div class="p-1"> <h5>Overview of the Department for year {{yearnow}}<h5></div>
+
+    <div class="container-lg m-1 justify-content-evenly" align="center">
+        <div class="row">
+                <!-- Page title -->
+                <div class="d-flex flex-row p-3 m-3 border justify-content-evenly" style= "border-radius: 25px">
+                    <div class="p-2"> <b>Average of Claims per Minute:</b> <br> {{ averagetime }} </b> </div>
+                    <div class="p-2"> <b>Median of Claims per Minute:</b>  <br> {{ mediantime }} </b> </div>
+                </div>
+
+            <!-- Bar Chart: Claims Per Minute CANVAS -->
+            <div class="col p-3 m-3 border justify-content-evenly" align="center" style= "border-radius: 25px">  
+                <div>
+                    <div class="p-1"> <b>Claims per minute for each Claims Agent for year {{yearnow}}</b>.<br> Calculation of the average based on the working hours individually </div><br> <br> 
+                        <div>
+                        <canvas id="claims_per_minute_chart"></canvas>
+                        </div>
+                </div>
+            </div>
+
+            <!-- Radar Chart: Per Category per agnet Numbers of Tasks CANVAS -->
+            <div class="col p-3 m-3 border" align="center" style= "border-radius: 25px">
+                <div>
+                    <div class="p-1"> <b>Claims Agents per Category for year {{yearnow}}</b><br>Average number of claims acquired.</div><br>
+                    <canvas id="radarChartPerCategoryOverview"></canvas>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>    
+
+    
+    <!-- Bar Chart: Claims Per Minute SCRIPT-->
+    <script>
+        var ctx = document.getElementById('claims_per_minute_chart');
+        // Variables xaxis = the name of the employee and yaxis the performance value
+        agent_names = JSON.parse({{ agent_names | tojson }})
+        agent_performance = JSON.parse({{ agent_performance | tojson }})
+        averageTime = JSON.parse({{ averagetime | tojson }})
+        medianTime = JSON.parse({{ mediantime | tojson }})
+
+        function generateLightColorRgb() {
+            const red = Math.floor((1 + Math.random()) * 256/2);
+            const green = Math.floor((1 + Math.random()) * 256/2);
+            const blue = Math.floor((1 + Math.random()) * 256/2);
+            return "rgba(" + red + ", " + green + ", " + blue + ", 0.7)";
+          }
+
+
+        new Chart(ctx, {
+        type: 'polarArea',
+        data: {
+            labels: agent_names,
+            datasets: [{
+            label: 'Claims per Minute',
+            data: agent_performance,
+            backgroundColor: Array.from({ length: 11 }, generateLightColorRgb),             
+            borderWidth: 2,
+            borderRadius: 5,
+            order: 2
+            }]
+        },
+        options: {
+            scales: {
+            y: {
+                beginAtZero: true
+            }
+            }
+        }
+        });
+    </script>
+
+    <!-- Radar Chart: Per Category per agnet Numbers of Tasks SCRIPT-->
+    <script>
+        var perCategoryCanvas = document.getElementById("radarChartPerCategoryOverview");
+        // labels = Employee Name
+        // label = Task Category Name
+        // Data = Acquired Tasks
+
+        agent_performance = JSON.parse({{ agent_performance | tojson }})
+
+        var perCategoryData = {
+            labels: agent_names,
+            datasets: [
+            {
+                label: "Accident & Emergency",
+                backgroundColor: generateLightColorRgb(),
+                borderColor: "black",
+                borderWidth: 1,
+                data: {{per_category_list[0]}}
+            },
+            {
+                label: "Allied Profesionals",
+                backgroundColor: generateLightColorRgb(),
+                borderColor: "black",
+                borderWidth: 1,
+                data: {{per_category_list[1]}}
+            },
+            {
+                label: "Inpatient",
+                backgroundColor: generateLightColorRgb(),
+                borderColor: "black",
+                borderWidth: 1,
+                data: {{per_category_list[2]}}
+            },
+            {
+                label: "Laboratory",
+                backgroundColor: generateLightColorRgb(),
+                borderColor: "black",
+                borderWidth: 1,
+                data: {{per_category_list[3]}}
+            },
+            {
+                label: "Nurses & Midwives",
+                backgroundColor: generateLightColorRgb(),
+                borderColor: "black",
+                borderWidth: 1,
+                data: {{per_category_list[4]}}
+            },
+            {
+                label: "Outpatient Specialists",
+                backgroundColor: generateLightColorRgb(),
+                borderColor: "black",
+                borderWidth: 1,
+                data: {{per_category_list[5]}}
+            },
+            {
+                label: "Personal Doctors",
+                backgroundColor: generateLightColorRgb(),
+                borderColor: "black",
+                borderWidth: 1,
+                data: {{per_category_list[6]}}
+            },
+            {
+                label: "Pharmacy",
+                backgroundColor: generateLightColorRgb(),
+                borderColor: "black",
+                borderWidth: 1,
+                data: {{per_category_list[7]}}
+            }
+            ]
+        };
+        
+        var radarPerCategoryOptions = {
+            plugins: {
+            title: {
+                display: false,
+                align: "center",
+                text: "Per Category Agent Acquired Tasks"
+            },
+            legend: {
+                align: "center"
+            },
+
+            },
+            scales: {
+            r: {
+                circular: true,
+                pointLabels: {
+                font: {
+                    size: 13
+                }
+                }
+            }
+            }
+        };
+        
+        new Chart(perCategoryCanvas, {
+            type: "radar",
+            data: perCategoryData,
+            options: radarPerCategoryOptions
+        });
+    </script>
+
+{% endblock %}
+

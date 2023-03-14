@@ -1,0 +1,49 @@
+-- # Table Creation # -- 
+DROP TABLE agent;
+CREATE TABLE
+agent (
+id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+email VARCHAR(80),
+first_name TEXT,
+last_name TEXT,
+active BOOLEAN
+);
+
+DROP TABLE performance;
+CREATE TABLE
+performance (
+id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+year INTEGER NOT NULL,
+month INTEGER NOT NULL,
+clmhrs INTEGER,
+prjhrs INTEGER,
+AE INTEGER,
+AP INTEGER,
+INP INTEGER,
+LB INTEGER,
+NM INTEGER,
+OS INTEGER,
+PD INTEGER,
+PH INTEGER,
+agent_email VARCHAR(80) NOT NULL,
+FOREIGN KEY (agent_email) REFERENCES agent(email)
+);
+
+
+DROP TABLE points;
+CREATE TABLE
+points (
+id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+AE REAL,
+AP REAL,
+INP REAL,
+LB REAL,
+NM REAL,
+OS REAL,
+PD REAL,
+PH REAL
+);
+
+-- Other commands -- 
+PRAGMA foreign_keys = ON;
+

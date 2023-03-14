@@ -1,0 +1,454 @@
+{% extends "layout.html" %}
+
+
+{% block main %}
+<div class="m-1 justify-content-evenly" align="center" >
+    <!-- Page title --> 
+    <div class="p-3"><h3>Perfomance Analysis for {{month_from_form}}/{{year_from_form}}</h3></div>
+
+    <div class="container-lg m-3 p-3 border" style= "border-radius: 25px">
+        <form class="row align-items-center" action="{{ url_for("month")}}" method="post" >
+            <!-- Month  Selection -->
+            <label for="month_select year_select" type="number" class="col mx-auto ">Choose a:</label>
+            <select class="form-control col mx-auto" id="month_select" name="month_select">
+                <option selected>Month</option>
+                {% for month in months %}
+                <option>{{ month }}</option>
+                {% endfor %}
+            </select>
+            <!-- Year Selection -->
+            <select class="form-control col   mx-auto" id="year_select" name="year_select">
+                <option selected>Year</option>
+                {% for year in years %}
+                <option>{{ year }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="form-control btn btn-secondary col mx-auto">Submit</button>
+        </form>
+    </div>
+
+    <div class="container-lg m-3 d-flex flex-row border justify-content-evenly" style= "border-radius: 25px">
+        <!-- Page title -->
+            <div class="p-2"> <b>Average of Claims per Minute:</b> <br> {{ averagetime }} </div>
+            <div class="p-2"> <b>Median of Claims per Minute:</b>  <br> {{ mediantime }} </div>
+    </div>
+
+
+    <!-- Container for the working hours -->
+    <div class="container-lg m-1 p-1 justify-content-evenly border" style= "border-radius: 25px">
+        <div class="row  justify-content-evenly" >
+          <div class="row">
+            <div class="col-lg  justify-content-evenly">
+                <h5><b>Hours in claim assessment and other projects</b></h5><br> 
+            </div>
+        </div>
+
+            <div class="row">
+              <div class="col  justify-content-evenly">
+                <b><p>Name:</p> <br> <p>Total Hours:</p> <br> <p> Project Hours: </p></b>
+              </div>
+                {% for i in range(0, first_name_list|length) %}
+                <div class="col  justify-content-evenly">
+                    <p>{{ first_name_list[i] }}</p> <br> <p>{{ workingHours_per_Agent[i] }}</p> <br> <p>{{projectHours_per_Agent[i]}} </p>
+                </div>
+              {% endfor %}
+            
+            </div>
+        </div>
+    </div>
+
+    <div class="container-lg">
+      <div class="row -lg">
+        <div class="col-lg p-3 m-3 border justify-content-evenly" style= "border-radius: 25px">
+          <h5> Claims per Minute Performance Chart</h5>
+            Calculation based on the working hours individually<br>
+            <!-- Bar Chart: Claims Per Minute CANVAS -->
+            <div class=" p-3 m-3" align="center">
+                    <div class="container">
+                        <canvas id="claims_per_minute_chart"></canvas>
+                    </div>
+            </div>
+        </div>
+
+      <div class="col-lg p-3 m-3 border justify-content-evenly" style= "border-radius: 25px">
+        <h5> Effort Points Performance Chart</h5>
+          Calculation based on type of claims acquired and working hours<br>
+          <!-- Bar Chart: the calcultion of the total effort points per employee CANVAS -->
+          <div class=" p-3 m-3" align="center">
+                  <div class="container">
+                      <canvas id="effort_points_chart"></canvas>
+                  </div>
+          </div>
+    </div>
+
+    <!-- Container for the Doughnut Charts -->
+    <div class="container-lg">
+        <div class="row">
+            <div class="col-lg p-3 m-3 border justify-content-evenly" style= "border-radius: 25px">
+                <h5>Accident and Emergency Chart</h5>Total: {{total_AE}}
+                <!-- Doughnut  Chart: AE CANVAS -->
+                <div class=" p-3 m-3" align="center">
+                        <canvas id="dougnut_for_AE"></canvas>
+                </div>
+            </div>
+
+
+
+            <div class="col-lg p-3 m-3 border justify-content-evenly" style= "border-radius: 25px">
+                <h5>Allied Profesionals Chart</h5>Total: {{total_AP}}
+                <!-- Doughnut  Chart: AP CANVAS -->
+                <div class=" p-3 m-3" align="center">
+                        <canvas id="dougnut_for_AP"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-lg">
+        <div class="row">
+            <div class="col-lg p-3 m-3 border justify-content-evenly" style= "border-radius: 25px">
+                <h5>Inpatient Chart</h5>Total: {{total_IN}}
+                <!-- Doughnut  Chart: AP CANVAS -->
+                <div class=" p-3 m-3" align="center">
+                    <canvas id="dougnut_for_IN"></canvas>
+                </div>
+            </div>
+
+            <div class="col-lg p-3 m-3 border justify-content-evenly" style= "border-radius: 25px">
+                <h5>Laboratory Chart</h5>Total: {{total_LB}}
+                <!-- Doughnut  Chart: AP CANVAS -->
+                <div class=" p-3 m-3" align="center">
+                    <canvas id="dougnut_for_LB"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-lg">
+        <div class="row">
+            <div class="col-lg p-3 m-3 border justify-content-evenly" style= "border-radius: 25px">
+                <h5>Nurses and Midwives Chart</h5>Total: {{total_NM}}
+                <!-- Doughnut  Chart: AP CANVAS -->
+                <div class=" p-3 m-3" align="center">
+                    <canvas id="dougnut_for_NM"></canvas>
+                </div>
+            </div>
+
+            <div class="col-lg p-3 m-3 border justify-content-evenly" style= "border-radius: 25px">
+                <h5>Outpatient Specialists Chart</h5>Total: {{total_OS}}
+                <!-- Doughnut  Chart: AP CANVAS -->
+                <div class=" p-3 m-3" align="center">
+                    <canvas id="dougnut_for_OS"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg p-3 m-3 border justify-content-evenly" style= "border-radius: 25px">
+                <h5>Personal Doctors Chart</h5>Total: {{total_PD}}
+                    <!-- Doughnut  Chart: AP CANVAS -->
+                    <div class=" p-3 m-3" align="center">
+                        <canvas id="dougnut_for_PD"></canvas>
+                    </div>
+            </div>
+
+
+
+            <div class="col-lg p-3 m-3 border justify-content-evenly" style= "border-radius: 25px">
+                <h5>Pharmacy Chart</h5>Total: {{total_PH}}
+                    <!-- Doughnut  Chart: AP CANVAS -->
+                    <div class=" p-3 m-3" align="center">
+                        <canvas id="dougnut_for_PH"></canvas>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <script>
+        // Variables xaxis = the name of the employee and yaxis the performance value
+        agent_performance = {{ agent_performance }}
+        agent_effort_points = {{ agent_effort_points }}
+        AE_list = {{AE_list}}
+        AP_list = {{AP_list}}
+        IN_list = {{IN_list}}
+        LB_list = {{LB_list}}
+        NM_list = {{NM_list}}
+        OS_list = {{OS_list}}
+        PD_list = {{PD_list}}
+        PH_list = {{PH_list}}
+        agent_names = JSON.parse({{ agent_names | tojson }})
+        
+        function generateLightColorRgb() {
+          const colors = [];
+          for (let i = 0; i < 10; i++) {
+            const red = Math.floor((1 + Math.random()) * 256/2);
+            const green = Math.floor((1 + Math.random()) * 256/2);
+            const blue = Math.floor((1 + Math.random()) * 256/2);
+            colors.push("rgba(" + red + ", " + green + ", " + blue + ", 0.7 )");
+          }
+          return colors;
+        }
+        
+        const generatedColors  = generateLightColorRgb();
+        
+
+        //Bar Chart: Claims Per Minute SCRIPT-->
+        var ctx = document.getElementById('claims_per_minute_chart');
+        new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: agent_names,
+            datasets: [{
+            label: 'Claims Per minute',
+            data: agent_performance,
+            backgroundColor: generatedColors
+          ,      
+            borderWidth: 2,
+            borderRadius: 5,
+            order: 2
+            }]
+        },
+        options: {
+            scales: {
+            y: {
+                beginAtZero: true
+            }
+            }
+        }
+        });
+
+
+        //Bar Chart: Effort Points SCRIPT-->
+        var ctx = document.getElementById('effort_points_chart');
+        new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: agent_names,
+            datasets: [{
+            label: 'Effort Points Performance',
+            data: agent_effort_points,
+            backgroundColor: generatedColors,      
+            borderWidth: 2,
+            borderRadius: 5,
+            order: 2
+            }]
+        },
+        options: {
+            scales: {
+            y: {
+                beginAtZero: true
+            }
+            }
+        }
+        });
+
+
+        // Doughnut  Chart: AE SCRIPT 
+        var ctx = document.getElementById('dougnut_for_AE');
+        new Chart(ctx,
+        {
+            type: 'pie',
+            data: {
+              datasets: [
+                {
+                  label: 'AE',
+                  data: AE_list,
+                  backgroundColor: generatedColors,
+                },
+              ],
+              labels: agent_names,
+            },
+          })
+
+
+        // Doughnut  Chart: AP SCRIPT -->
+        var ctx = document.getElementById('dougnut_for_AP');
+        new Chart(ctx,
+        {
+            type: 'pie',
+            data: {
+              datasets: [
+                {
+                  label: 'AP',
+                  data: AP_list ,
+                  backgroundColor: generatedColors,
+                },
+              ],
+              labels: agent_names,
+            },
+            options: {
+              plugins: {
+                datalabels: {
+                  formatter: (value) => {
+                    return value + '%';
+                  },
+                },
+              },
+            },
+          })
+
+        // Doughnut  Chart: INP SCRIPT -->
+        var ctx = document.getElementById('dougnut_for_IN');
+        new Chart(ctx,
+        {
+            type: 'pie',
+            data: {
+                datasets: [
+                {
+                  label: 'IN',
+                    data: IN_list ,
+                    backgroundColor: generatedColors,
+                },
+                ],
+                labels: agent_names,
+            },
+            options: {
+                plugins: {
+                datalabels: {
+                    formatter: (value) => {
+                    return value + '%';
+                    },
+                },
+                },
+            },
+            })
+
+        // Doughnut  Chart: LB SCRIPT -->
+        var ctx = document.getElementById('dougnut_for_LB');
+        new Chart(ctx,
+        {
+            type: 'pie',
+            data: {
+              datasets: [
+                {
+                  label: 'LB',
+                  data: LB_list ,
+                  backgroundColor: generatedColors,
+                },
+              ],
+              labels: agent_names,
+            },
+            options: {
+              plugins: {
+                datalabels: {
+                  formatter: (value) => {
+                    return value + '%';
+                  },
+                },
+              },
+            },
+          })
+
+        //Doughnut  Chart: NM SCRIPT -->
+        var ctx = document.getElementById('dougnut_for_NM');
+        new Chart(ctx,
+        {
+            type: 'pie',
+            data: {
+              datasets: [
+                {
+                  label: 'NM',
+                  data: NM_list ,
+                  backgroundColor: generatedColors,
+                },
+              ],
+              labels: agent_names,
+            },
+            options: {
+              plugins: {
+                datalabels: {
+                  formatter: (value) => {
+                    return value + '%';
+                  },
+                },
+              },
+            },
+          })
+
+          
+        // Doughnut  Chart: NM SCRIPT -->
+        var ctx = document.getElementById('dougnut_for_OS');
+        new Chart(ctx,
+        {
+            type: 'pie',
+            data: {
+                datasets: [
+                {
+                  label: 'OS',
+                    data: OS_list ,
+                    backgroundColor: generatedColors,
+                },
+                ],
+                labels: agent_names,
+            },
+            options: {
+                plugins: {
+                datalabels: {
+                    formatter: (value) => {
+                    return value + '%';
+                    },
+                },
+                },
+            },
+            })
+
+        // Doughnut  Chart: NM SCRIPT -->
+        var ctx = document.getElementById('dougnut_for_PD');
+        new Chart(ctx,
+        {
+            type: 'pie',
+            data: {
+                datasets: [
+                {
+                  label: 'PD',
+                    data: PD_list ,
+                    backgroundColor: generatedColors,
+                },
+                ],
+                labels: agent_names,
+            },
+            options: {
+                plugins: {
+                datalabels: {
+                    formatter: (value) => {
+                    return value + '%';
+                    },
+                },
+                },
+            },
+            })
+
+
+        //Doughnut  Chart: NM SCRIPT -->
+
+        var ctx = document.getElementById('dougnut_for_PH');
+        new Chart(ctx,
+        {
+            type: 'pie',
+            data: {
+              datasets: [
+                {
+                  label: 'PH',
+                  data: PH_list,
+                  backgroundColor: generatedColors,
+                },
+              ],
+              labels: agent_names,
+            },
+            options: {
+              plugins: {
+                datalabels: {
+                  formatter: (value) => {
+                    return value + '%';
+                  },
+                },
+              },
+            },
+          })
+
+    </script>
+
+{% endblock %}
+

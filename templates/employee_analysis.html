@@ -1,0 +1,666 @@
+{% extends "layout.html" %}
+
+
+{% block main %}
+<div class="m-1 " align="center" >
+    <!-- Page title --> 
+    <div ><h3>Perfomance Analysis of <br>{{agent_name}} for year {{yearnow}}</br></h3></div>
+
+    <div class="container-lg m-3 p-3 border" style= "border-radius: 25px">
+        <form class="row align-items-center" action="{{ url_for("employee")}}" method="post" >
+            <!-- Agent Name Selection -->
+            <label for="agent_select " class="col mx-auto ">Choose a:</label>
+            <select class="form-control col   mx-auto" id="agent_select" name="agent_select">
+                <option selected>SPV Claims Agent Name</option>
+                {% for name in listof_AgentName %}
+                <option>{{ name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="form-control btn btn-secondary col mx-auto">Submit</button>
+        </form>
+    </div> 
+
+
+
+    <!-- Container for the working hours -->
+    <div class="container-lg m-1 p-1 justify-content-evenly border" style= "border-radius: 25px">
+      <div class="row  justify-content-evenly" >
+        <div class="row">
+          <div class="col-lg  justify-content-evenly">
+              <h5><b>Hours in claim assessment and other projects</b></h5><br> 
+          </div>
+        </div>
+      
+          <div class="row">
+            <div class="col  justify-content-evenly">
+              <b> <br> <p>Montly Hours:</p> <br> <p> Project Hours: </p></b>
+            </div>
+              {% for i in range(0, agent_monthly_workingHours|length) %}
+              <div class="col  justify-content-evenly">
+                  <p> <br> <p>{{ agent_monthly_workingHours[i] }}</p> <br> <p>{{ agent_monthly_projectHours[i] }} </p>
+              </div>
+            {% endfor %}
+          
+          </div>
+      </div>
+  </div>
+
+
+
+    <div class="container-lg p-3 m-3 border justify-content-evenly" style= "border-radius: 25px">
+        <h5> Claims per Minute Performance Chart</h5>
+        Calculation based on the working hours<br>
+        
+      <!-- Bar Chart: Claims Per Minute CANVAS -->
+      <div class="p-3 m-3" align="center">
+        <div class="container">
+            <canvas id="montly_KPI_chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Container for the Doughnut Charts -->
+    <div class="container-lg">
+
+        <div class="row">
+            <div class="col-lg p-3 m-3 border justify-content-evenly" style= "border-radius: 25px">
+                <h5>Accident and Emergency Chart</h5><br>
+                <!-- Doughnut  Chart: AE CANVAS -->
+                <div class=" p-3 m-3" align="center">
+                        <canvas id="chart_for_AE"></canvas>
+                </div>
+            </div>
+
+
+
+            <div class="col-lg p-3 m-3 border justify-content-evenly" style= "border-radius: 25px">
+                <h5>Allied Profesionals Chart</h5><br>
+                <!-- Doughnut  Chart: AP CANVAS -->
+                <div class=" p-3 m-3" align="center">
+                        <canvas id="chart_for_AP"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg p-3 m-3 border justify-content-evenly" style= "border-radius: 25px">
+                <h5>Inpatient Chart</h5><br>
+                <!-- Doughnut  Chart: IN CANVAS -->
+                <div class=" p-3 m-3" align="center">
+                        <canvas id="chart_for_IN"></canvas>
+                </div>
+            </div>
+
+
+
+            <div class="col-lg p-3 m-3 border justify-content-evenly" style= "border-radius: 25px">
+                <h5>Laboratory Chart</h5><br>
+                <!-- Doughnut  Chart: LB CANVAS -->
+                <div class=" p-3 m-3" align="center">
+                        <canvas id="chart_for_LB"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg p-3 m-3 border justify-content-evenly" style= "border-radius: 25px">
+                <h5>Nurses and Midwives Chart</h5><br>
+                <!-- Doughnut  Chart: NM CANVAS -->
+                <div class=" p-3 m-3" align="center">
+                        <canvas id="chart_for_NM"></canvas>
+                </div>
+            </div>
+
+
+
+            <div class="col-lg p-3 m-3 border justify-content-evenly" style= "border-radius: 25px">
+                <h5>Outpatient Specialist Chart</h5><br>
+                <!-- Doughnut  Chart: OS CANVAS -->
+                <div class=" p-3 m-3" align="center">
+                        <canvas id="chart_for_OS"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg p-3 m-3 border justify-content-evenly" style= "border-radius: 25px">
+                <h5>Personal Doctor Chart</h5><br>
+                <!-- Doughnut  Chart: PD CANVAS -->
+                <div class=" p-3 m-3" align="center">
+                        <canvas id="chart_for_PD"></canvas>
+                </div>
+            </div>
+
+
+
+            <div class="col-lg p-3 m-3 border justify-content-evenly" style= "border-radius: 25px">
+                <h5>Pharmacies Chart</h5><br>
+                <!-- Doughnut  Chart: PH CANVAS -->
+                <div class=" p-3 m-3" align="center">
+                        <canvas id="chart_for_PH"></canvas>
+                </div>
+            </div>
+        </div>
+
+
+</div>
+
+<script>
+        // Variables
+        month_number = JSON.parse({{ month_number | tojson}})
+        var performance_number = {{ performance_number | safe }}
+        var avg_department_monthly_performance_list = {{ avg_department_monthly_performance_list | safe }}
+        const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+        
+        AE_monthly = JSON.parse({{ AE_monthly | tojson}})
+        AP_monthly = JSON.parse({{ AP_monthly | tojson}})
+        IN_monthly = JSON.parse({{ IN_monthly | tojson}})
+        LB_monthly = JSON.parse({{ LB_monthly | tojson}})
+        NM_monthly = JSON.parse({{ NM_monthly | tojson}})
+        OS_monthly = JSON.parse({{ OS_monthly | tojson}})
+        PD_monthly = JSON.parse({{ PD_monthly | tojson}})
+        PH_monthly = JSON.parse({{ PH_monthly | tojson}})
+
+        dep_AE_monthly = JSON.parse({{ dep_AE_monthly | tojson}})
+        dep_AP_monthly = JSON.parse({{ dep_AP_monthly | tojson}})
+        dep_IN_monthly = JSON.parse({{ dep_IN_monthly | tojson}})
+        dep_LB_monthly = JSON.parse({{ dep_LB_monthly | tojson}})
+        dep_NM_monthly = JSON.parse({{ dep_NM_monthly | tojson}})
+        dep_OS_monthly = JSON.parse({{ dep_OS_monthly | tojson}})
+        dep_PD_monthly = JSON.parse({{ dep_PD_monthly | tojson}})
+        dep_PH_monthly = JSON.parse({{ dep_PH_monthly | tojson}})
+
+
+
+          function generateLightColorRgb() {
+            const colors = [];
+            for (let i = 0; i < 12; i++) {
+              const red = Math.floor((1 + Math.random()) * 256/2);
+              const green = Math.floor((1 + Math.random()) * 256/2);
+              const blue = Math.floor((1 + Math.random()) * 256/2);
+              colors.push("rgba(" + red + ", " + green + ", " + blue + ", 0.7 )");
+            }
+            return colors;
+          }
+          const LightColorRgb = generateLightColorRgb();
+
+          function generateIntenseColorRgb() {
+            const colors = [];
+            for (let i = 0; i < 12; i++) {
+              const red = Math.floor((1 + Math.random()) * 256/2);
+              const green = Math.floor((1 + Math.random()) * 256/2);
+              const blue = Math.floor((1 + Math.random()) * 256/2);
+              colors.push("rgba(" + red + ", " + green + ", " + blue + ", 0.7 )");
+            }
+            return colors;
+          }
+          const IntenseColorRgb = generateIntenseColorRgb();
+
+
+        //Bar Chart: Claims Per Minute SCRIPT-->
+        var ctx = document.getElementById('montly_KPI_chart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: month,
+                datasets: [
+                      {
+                        type: 'line',
+                        label: 'Department Average',
+                        data: avg_department_monthly_performance_list,
+                        fill: false,
+                        backgroundColor: LightColorRgb,
+                        borderColor: IntenseColorRgb,
+                        borderWidth: 3,
+                        datalabels: {
+                            display: false
+                        }
+                    },
+                    {
+                        label: 'Monthly Employee Performance',
+                        data: performance_number,
+                        backgroundColor: Array.from({length: 12}, () => LightColorRgb),
+                        borderColor: IntenseColorRgb,
+                        borderWidth: 1,
+                        datalabels: {
+                            color: 'black',
+                            anchor: 'end',
+                            align: 'top'
+                        }
+                    }
+                ]
+            },
+            options: {
+                plugins: {
+                    datalabels: {
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+
+
+        // Line Chart: AE SCRIPT 
+        var ctx = document.getElementById('chart_for_AE').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: month,
+                datasets: [
+                      {
+                        type: 'line',
+                        label: 'Department Average',
+                        data: dep_AE_monthly,
+                        fill: false,
+                        backgroundColor: LightColorRgb,
+                        borderColor: IntenseColorRgb,
+                        borderWidth: 4,
+                        datalabels: {
+                            display: false
+                        }
+                    },
+                    {
+                        label: 'Monthly Employee Performance',
+                        data: AE_monthly,
+                        backgroundColor: Array.from({length: 12}, () => LightColorRgb),
+                        borderColor: IntenseColorRgb,
+                        borderWidth: 1,
+                        datalabels: {
+                            color: 'black',
+                            anchor: 'end',
+                            align: 'top'
+                        }
+                    }
+                ]
+            },
+            options: {
+                plugins: {
+                    datalabels: {
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+        // Line Chart: AP SCRIPT 
+        var ctx = document.getElementById('chart_for_AP');
+        var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: month,
+              datasets: [
+                    {
+                      type: 'line',
+                      label: 'Department Average',
+                      data: dep_AP_monthly,
+                      fill: false,
+                      backgroundColor: LightColorRgb,
+                      borderColor: IntenseColorRgb,
+                      borderWidth: 4,
+                      datalabels: {
+                          display: false
+                      }
+                  },
+                  {
+                      label: 'Monthly Employee Performance',
+                      data: AP_monthly,
+                      backgroundColor: Array.from({length: 12}, () => LightColorRgb),
+                      borderColor: IntenseColorRgb,
+                      borderWidth: 1,
+                      datalabels: {
+                          color: 'black',
+                          anchor: 'end',
+                          align: 'top'
+                      }
+                  }
+              ]
+          },
+          options: {
+              plugins: {
+                  datalabels: {
+                      font: {
+                          weight: 'bold'
+                      }
+                  }
+              },
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+              }
+          }
+      });
+
+
+        // Line Chart: IN SCRIPT 
+        var ctx = document.getElementById('chart_for_IN');
+        var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: month,
+              datasets: [
+                    {
+                      type: 'line',
+                      label: 'Department Average',
+                      data: dep_IN_monthly,
+                      fill: false,
+                      backgroundColor: LightColorRgb,
+                      borderColor: IntenseColorRgb,
+                      borderWidth: 4,
+                      datalabels: {
+                          display: false
+                      }
+                  },
+                  {
+                      label: 'Monthly Employee Performance',
+                      data: IN_monthly,
+                      backgroundColor: Array.from({length: 12}, () => LightColorRgb),
+                      borderColor: IntenseColorRgb,
+                      borderWidth: 1,
+                      datalabels: {
+                          color: 'black',
+                          anchor: 'end',
+                          align: 'top'
+                      }
+                  }
+              ]
+          },
+          options: {
+              plugins: {
+                  datalabels: {
+                      font: {
+                          weight: 'bold'
+                      }
+                  }
+              },
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+              }
+          }
+      });
+
+
+        // Line Chart: LB SCRIPT 
+        var ctx = document.getElementById('chart_for_LB');
+        var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: month,
+              datasets: [
+                    {
+                      type: 'line',
+                      label: 'Department Average',
+                      data: dep_LB_monthly,
+                      fill: false,
+                      backgroundColor: LightColorRgb,
+                      borderColor: IntenseColorRgb,
+                      borderWidth: 4,
+                      datalabels: {
+                          display: false
+                      }
+                  },
+                  {
+                      label: 'Monthly Employee Performance',
+                      data: LB_monthly,
+                      backgroundColor: Array.from({length: 12}, () => LightColorRgb),
+                      borderColor: IntenseColorRgb,
+                      borderWidth: 1,
+                      datalabels: {
+                          color: 'black',
+                          anchor: 'end',
+                          align: 'top'
+                      }
+                  }
+              ]
+          },
+          options: {
+              plugins: {
+                  datalabels: {
+                      font: {
+                          weight: 'bold'
+                      }
+                  }
+              },
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+              }
+          }
+      });
+
+        // Line Chart: NM SCRIPT 
+        var ctx = document.getElementById('chart_for_NM');
+        var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: month,
+              datasets: [
+                    {
+                      type: 'line',
+                      label: 'Department Average',
+                      data: dep_NM_monthly,
+                      fill: false,
+                      backgroundColor: LightColorRgb,
+                      borderColor: IntenseColorRgb,
+                      borderWidth: 4,
+                      datalabels: {
+                          display: false
+                      }
+                  },
+                  {
+                      label: 'Monthly Employee Performance',
+                      data: NM_monthly,
+                      backgroundColor: Array.from({length: 12}, () => LightColorRgb),
+                      borderColor: IntenseColorRgb,
+                      borderWidth: 1,
+                      datalabels: {
+                          color: 'black',
+                          anchor: 'end',
+                          align: 'top'
+                      }
+                  }
+              ]
+          },
+          options: {
+              plugins: {
+                  datalabels: {
+                      font: {
+                          weight: 'bold'
+                      }
+                  }
+              },
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+              }
+          }
+      });
+
+        // Line Chart: OS SCRIPT 
+        var ctx = document.getElementById('chart_for_OS');
+        var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: month,
+              datasets: [
+                    {
+                      type: 'line',
+                      label: 'Department Average',
+                      data: dep_OS_monthly,
+                      fill: false,
+                      backgroundColor: LightColorRgb,
+                      borderColor: IntenseColorRgb,
+                      borderWidth: 4,
+                      datalabels: {
+                          display: false
+                      }
+                  },
+                  {
+                      label: 'Monthly Employee Performance',
+                      data: OS_monthly,
+                      backgroundColor: Array.from({length: 12}, () => LightColorRgb),
+                      borderColor: IntenseColorRgb,
+                      borderWidth: 1,
+                      datalabels: {
+                          color: 'black',
+                          anchor: 'end',
+                          align: 'top'
+                      }
+                  }
+              ]
+          },
+          options: {
+              plugins: {
+                  datalabels: {
+                      font: {
+                          weight: 'bold'
+                      }
+                  }
+              },
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+              }
+          }
+      });
+
+// Line Chart: PD SCRIPT 
+var ctx = document.getElementById('chart_for_PD');
+var myChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+      labels: month,
+      datasets: [
+            {
+              type: 'line',
+              label: 'Department Average',
+              data: dep_PD_monthly,
+              fill: false,
+              backgroundColor: LightColorRgb,
+              borderColor: IntenseColorRgb,
+              borderWidth: 4,
+              datalabels: {
+                  display: false
+              }
+          },
+          {
+              label: 'Monthly Employee Performance',
+              data: PD_monthly,
+              backgroundColor: Array.from({length: 12}, () => LightColorRgb),
+              borderColor: IntenseColorRgb,
+              borderWidth: 1,
+              datalabels: {
+                  color: 'black',
+                  anchor: 'end',
+                  align: 'top'
+              }
+          }
+      ]
+  },
+  options: {
+      plugins: {
+          datalabels: {
+              font: {
+                  weight: 'bold'
+              }
+          }
+      },
+      scales: {
+          yAxes: [{
+              ticks: {
+                  beginAtZero: true
+              }
+          }]
+      }
+  }
+});
+
+
+// Line Chart: PH SCRIPT 
+var ctx = document.getElementById('chart_for_PH');
+var myChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+      labels: month,
+      datasets: [
+            {
+              type: 'line',
+              label: 'Department Average',
+              data: dep_PH_monthly,
+              fill: false,
+              backgroundColor: LightColorRgb,
+              borderColor: IntenseColorRgb,
+              borderWidth: 4,
+              datalabels: {
+                  display: false
+              }
+          },
+          {
+              label: 'Monthly Employee Performance',
+              data: PH_monthly,
+              backgroundColor: Array.from({length: 12}, () => LightColorRgb),
+              borderColor: IntenseColorRgb,
+              borderWidth: 1,
+              datalabels: {
+                  color: 'black',
+                  anchor: 'end',
+                  align: 'top'
+              }
+          }
+      ]
+  },
+  options: {
+      plugins: {
+          datalabels: {
+              font: {
+                  weight: 'bold'
+              }
+          }
+      },
+      scales: {
+          yAxes: [{
+              ticks: {
+                  beginAtZero: true
+              }
+          }]
+      }
+  }
+});
+</script>
+
+{% endblock %}

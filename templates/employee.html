@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+
+{% block main %}
+<div class="m-1 " align="center" >
+    <!-- Page title --> 
+    <div class="p-3"><h3>Perfomance Analysis of SPV Claims Agents <br></br></h3></div>
+
+    <div class="container-lg m-3 p-3 border" style= "border-radius: 25px">
+        <form class="row align-items-center" action="{{ url_for("employee")}}" method="post" >
+            <!-- Agent Name Selection -->
+            <label for="agent_select " class="col mx-auto ">Choose a:</label>
+            <select class="form-control col   mx-auto" id="agent_select" name="agent_select">
+                <option selected>SPV Claims Agent Name</option>
+                {% for name in listof_AgentName %}
+                <option>{{ name }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="form-control btn btn-secondary col mx-auto">Submit</button>
+        </form>
+    </div>     
+
+
+</div>
+{% endblock %}

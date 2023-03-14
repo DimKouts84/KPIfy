@@ -1,0 +1,119 @@
+{% extends "layout.html" %}
+
+
+{% block main %}
+<div class="m-1 justify-content-evenly" align="center">
+
+    <div class="mb-5 justify-content-evenly">
+        <h3>Settings</h3>
+        <p>To manage employee and performance data</p>
+    </div>
+
+    <div class="d-flex flex-column justify-content-around align-items-cente m-3 p-3  mb-5 border" style= "border-radius: 25px">
+        <div class="d-flex flex-row m-3 justify-content-around align-items-cente">
+            <h5>Import Employee Data here:</h5>
+        </div>
+
+        <form class="row align-items-center" action="{{ url_for("settings")}}" enctype="multipart/form-data" method="POST" > 
+ 
+            <div class="d-flex flex-row">
+
+                <div class="d-flex flex-row mb-5">
+                        <span class="input-group-text ">Month</span>
+                        <input type="number" aria-label="First name" class="form-control" id="month_selected" name="month_selected">
+                        <span class="input-group-text ">Year</span>
+                        <input type="number" aria-label="First name" class="form-control" id="year_selected" name="year_selected">
+                </div>
+
+                <div class="d-flex flex-row ">
+                    <p>Monthly Employee Performance:</p>
+                </div>
+                <div class="d-flex flex-row">
+                    <div class="input-group mb-5">
+                        <input type="file" class="form-control" name="userPerformanceData" accept=".csv" id="userPerformanceData" name="userPerformanceData">
+                    </div>
+                </div>
+                <div class="d-flex flex-row">
+                    <p>Monthly working hours:</p>
+                </div>
+                <div class="d-flex flex-row">
+                    <div class="input-group mb-5">
+                        <input type="file" class="form-control" name="userWorkingHours" accept=".csv" id="userWorkingHours" name="userWorkingHours">
+                    </div>
+                </div>
+            </div>
+            <p><i><b>Note:</b> Month must be from 1 to 12.</i></p>
+            <div class="mb-3">
+                <button type="submit" class="btn btn-secondary">Submit Data</button>
+            </div>
+        </form>
+    </div>
+
+    
+    <div class="d-flex flex-column justify-content-around align-items-cente m-3 p-3 mb-5 border" style= "border-radius: 25px">
+        <div class="d-flex flex-column justify-content-around align-items-cente mb-3" > 
+            <h5>Add a new Employee:</h5>
+            <p><i>Submit the full name and SPV email of a new employee:</i></p>
+        </div>
+        <form class="row align-items-center" action="{{ url_for("settings")}}" method="POST" > 
+            <div class="d-flex flex-row justify-content-around align-items-cente mb-3">
+                <div class="input-group">
+                    <div class="input-group mb-3">
+                        <label for="first-name" class="input-group-text">First name</label>
+                        <input type="text" id="first-name" name="first-name" aria-label="first-name" class="form-control">
+                        <label for="last-name" class="input-group-text">Last name</label>
+                        <input type="text" id="last-name" name="last-name" aria-label="last-name" class="form-control">
+                        <label for="email" class="input-group-text">Email</label>
+                        <input type="text" id="email" name="email" aria-label="email" class="form-control">
+                        <button type="submit" class="form-control btn btn-secondary">Add</button>
+                    </div>
+                </div>
+            </div> 
+        </form>
+    </div>
+    
+
+    <div class="d-flex flex-column justify-content-around align-items-cente m-3 p-3 mb-5 border" style= "border-radius: 25px">
+        <div class="d-flex flex-column justify-content-around align-items-cente" > 
+            <h5>Change employee status</h5>
+            <p><i>Change the status of an active employee to inactive and vice versa.</i></p>
+        </div>
+        <div class="d-flex flex-row justify-content-around align-items-cente mb-3">
+            <div class="d-flex flex-column p-3">
+                <p><i>For Active Employees:</i></p>
+                <div class="container-lg m-3 p-3">
+                    <form class="row align-items-center" action="{{ url_for("settings")}}" method="post" >
+                        <!-- Agent Name Selection -->
+                        <label form="deactive_agent_select " class="col mx-auto ">Choose a:</label>
+                        <select class="form-control col mx-auto" id="deactive_agent_select" name="deactive_agent_select">
+                            <option selected>SPV Claims Agent Name</option>
+                            {% for name in listof_Active_AgentName %}
+                            <option>{{ name }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="form-control btn btn-secondary col mx-auto">Deactivate</button>
+                    </form>
+                </div>     
+            </div>
+
+            <div class="d-flex flex-column p-3" > 
+                <p><i>For Inactive Employees:</i></p>
+                <div class="container-lg m-3 p-3" >
+                    <form class="row align-items-center" action="{{ url_for("settings")}}" method="post" >
+                        <!-- Agent Name Selection to Activate Again -->
+                        <label for="reactive_agent_select " class="col mx-auto ">Choose a:</label>
+                        <select class="form-control col mx-auto" id="reactive_agent_select" name="reactive_agent_select">
+                            <option selected>SPV Claims Agent Name</option>
+                            {% for name in listof_Inactive_AgentName %}
+                            <option>{{ name }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="form-control btn btn-secondary col mx-auto">Activate</button>
+                    </form>
+                </div>     
+            </div>
+        </div>
+
+    </div>  
+</div> 
+{% endblock %}

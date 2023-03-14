@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+
+{% block main %}
+<div class=" p-3 m-3 border" align="center" style= "border-radius: 25px">  
+Agent Performance: 
+{{ agent_performance }}
+</div>
+
+
+
+<!-- Bar Chart: Claims Per Minute CANVAS -->
+<div class=" p-3 m-3 border" align="center" style= "border-radius: 25px">  
+    <div>
+        <div class="p-1"> Claims per minute for each Claims Agent.<br> Calculation based on the working hours individually </div><br> <br> 
+            <div>
+            <canvas id="claims_per_minute_chart"></canvas>
+            </div>
+    </div>
+</div>
+
+<div>
+    <!-- Bar Chart: Claims Per Minute SCRIPT-->
+    <script>
+        var ctx = document.getElementById('claims_per_minute_chart');
+        // Variables xaxis = the name of the employee and yaxis the performance value
+        agent_names = JSON.parse({{ agent_names | tojson }})
+        agent_performance = {{ agent_performance  }}
+        averageTime = {{ averagetime }}
+        medianTime = {{ mediantime  }}
+
+        new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: agent_names,
+            datasets: [{
+            label: 'Claims per Minute',
+            data: agent_performance,
+            backgroundColor: [
+                'rgba(255, 159, 64, 0.7)',
+                'rgba(255, 205, 86, 0.7)',
+                'rgba(75, 192, 192, 0.7)',
+                'rgba(54, 162, 235, 0.7)',
+                'rgba(153, 102, 255, 0.7)',
+                'rgba(201, 203, 207, 0.7)',
+                'rgba(255, 159, 64, 0.7)',
+                'rgba(75, 192, 192, 0.7)',
+                'rgba(54, 162, 235, 0.7)'
+          ],      
+            borderWidth: 2,
+            borderRadius: 5,
+            order: 2
+            }]
+        },
+        options: {
+            scales: {
+            y: {
+                beginAtZero: true
+            }
+            }
+        }
+        });
+    </script>
+</div>
+
+
+{% endblock %}
