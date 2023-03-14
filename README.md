@@ -23,11 +23,11 @@ There is a variance between employees regarding the time worked in claims assess
 
 > **Index Page:**
 Provides an overview of the most importan metrics for the current year.
-> 
-> - Average and Median of tasks completed per minute
-> - Average of tasks per minute metric for each employee
-> - A count of tasks completed for each category
-> 
+
+ - Average and Median of tasks completed per minute
+ - Average of tasks per minute metric for each employee
+ - A count of tasks completed for each category
+
 > **Monthly Analysis Page:**
 > An in depth analysis for each month of the current year.
 > 
