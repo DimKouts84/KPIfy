@@ -17,7 +17,7 @@ It is  also used for the quarterly and annual employee review.
 Different tasks (type of claims) required different times for completion and other projects are carried out by employees, in addition to the claims assessment.
 There is a variance between employees regarding the time worked in claims assessment tasks and other projects each month.
 
----
+
 
 ## 📄 Content
 
