@@ -34,6 +34,7 @@ Provides an overview of the most important metrics for the current year.
  - Average of completed tasks per minute metric for each employee
  - A count of tasks completed for each category
 
+
 > **Monthly Analysis Page:**
 > 
  An in-depth analysis for each month of the current year.
@@ -46,7 +47,7 @@ Provides an overview of the most important metrics for the current year.
 An analysis of the performance and tasks completed per employee for the current year.
 
 
-> **Settings Page:
+> **Settings Page:**
 >
 On this page, we import data (performance and working hours for each month) into the database.
 We can also add new employees, deactivate them (if they no longer work with the company) or activate them again (in case of a mistake).
