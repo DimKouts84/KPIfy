@@ -251,8 +251,6 @@ def monthly_acquired_perCategory_department(task_name):
         number_of_tasks_perCategory_perMonth_list.append(number_of_tasks_perCategory_perMonth[0])
     return number_of_tasks_perCategory_perMonth_list
 
-def EffortPoints_perEmployee_forCurrentYear():
-    return 
 
 #----------------------------------------------------------------------------#
 # Functions for the /settings page to import employee data into the DB and change status (active/inactive).
