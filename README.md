@@ -3,7 +3,7 @@
 ### A web app to help monitor the performance of employees in a visual way.
 
 <aside>
-💡 Created using **Python**, **Flask,** **Jinja and Bootstrap**, **SQLite3**, **Javascript** and **ChartJS**.
+💡 Created using **Python, Flask, Jinja** and **Bootstrap, SQLite3, Javascript** and **ChartJS**.
 
 </aside>
 
