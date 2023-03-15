@@ -12,15 +12,14 @@
 ## 👀 Context
 
 > **What is this:**
+> 
 This web app was created to monitor the employee performance of a Medical Insurance Claims department. 
 It is also used for quarterly and annual employee reviews.
-> 
 
 > **The problem:**
+> 
 Different tasks (type of claims) require different times for completion and other projects are carried out by employees, in addition to the claims assessment.
 There is a variance between employees regarding the time worked on claims assessment tasks and other projects each month.
-> 
-
 ---
 
 ## 📄 Content
