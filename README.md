@@ -26,27 +26,29 @@ There is a variance between employees regarding the time worked on claims assess
 ## 📄 Content
 
 > **Index Page:**
+>
 Provides an overview of the most important metrics for the current year.
- >
-> - Average and Median of tasks completed per minute
-> - Average of completed tasks per minute metric for each employee
-> - A count of tasks completed for each category
+ - Average and Median of tasks completed per minute
+ - Average of completed tasks per minute metric for each employee
+ - A count of tasks completed for each category
 
 > **Monthly Analysis Page:**
+> 
  An in-depth analysis for each month of the current year.
->
-> - Average and Median of tasks completed per minute for this month
-> - Tasks completed per employee per task category
-> - Effort points analysis: Performance based on the count and difficulty of each task category.
+ - Average and Median of tasks completed per minute for this month
+ - Tasks completed per employee per task category
+ - Effort points analysis: Performance based on the count and difficulty of each task category.
 
 > **Employee Analysis Page:**
+>
 An analysis of the performance and tasks completed per employee for the current year.
-> 
+
 
 > **Settings Page:
+>
 On this page, we import data (performance and working hours for each month) into the database.
 We can also add new employees, deactivate them (if they no longer work with the company) or activate them again (in case of a mistake).
->
+
 
 
 
