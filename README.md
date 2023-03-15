@@ -40,7 +40,7 @@ Provides an overview of the most important metrics for the current year.
 > - Effort points analysis: Performance based on the count and difficulty of each task category.
 
 > **Employee Analysis Page:**
-An analysis of the performance and tasks completed per employee for the current year
+An analysis of the performance and tasks completed per employee for the current year.
 > 
 
 > **Settings Page:
