@@ -53,7 +53,7 @@
     <div class="d-flex flex-column justify-content-around align-items-cente m-3 p-3 mb-5 border" style= "border-radius: 25px">
         <div class="d-flex flex-column justify-content-around align-items-cente mb-3" > 
             <h5>Add a new Employee:</h5>
-            <p><i>Submit the full name and SPV email of a new employee:</i></p>
+            <p><i>Submit the full name and company email of a new employee:</i></p>
         </div>
         <form class="row align-items-center" action="{{ url_for("settings")}}" method="POST" > 
             <div class="d-flex flex-row justify-content-around align-items-cente mb-3">
@@ -86,7 +86,7 @@
                         <!-- Agent Name Selection -->
                         <label form="deactive_agent_select " class="col mx-auto ">Choose a:</label>
                         <select class="form-control col mx-auto" id="deactive_agent_select" name="deactive_agent_select">
-                            <option selected>SPV Claims Agent Name</option>
+                            <option selected>Claims Agent Name</option>
                             {% for name in listof_Active_AgentName %}
                             <option>{{ name }}</option>
                             {% endfor %}
