@@ -1,8 +1,6 @@
 # KPIfy
 
 ### A web app to help monitor the performance of employees in a visual way.
-#### **Try it on**: [Render.com](https://kpify.onrender.com/)
-
 
 💡 Created using **Python**, **Flask,** **Jinja and Bootstrap**, **SQLite3**, **Javascript** and **ChartJS**.
 
